@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dieta Casalinga di Lulù - Calcolatore & Spesa</title>
-    <!-- Libreria per la lettura dei file PDF direttamente dal browser -->
+    <!-- Libreria pdf.js per lettura PDF lato client -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -91,28 +91,33 @@
             background: var(--primary-light);
         }
 
-        .days-picker {
+        .controls-row {
             display: flex;
-            align-items: center;
-            gap: 12px;
+            gap: 16px;
+            flex-wrap: wrap;
             background: var(--primary-light);
             padding: 16px;
             border-radius: var(--radius);
             margin-bottom: 20px;
+            align-items: center;
         }
 
-        .days-picker label {
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-group label {
             font-weight: 600;
             color: var(--primary);
         }
 
-        .days-picker input {
-            width: 80px;
+        .control-group input, .control-group select {
             padding: 6px 10px;
             border: 1px solid var(--border);
             border-radius: 6px;
-            text-align: center;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
         }
 
@@ -209,25 +214,34 @@
 <div class="container">
     <header>
         <h1>🐾 Dieta di Lulù</h1>
-        <p>Gestore Dieta Casalinga & Calcolatore Spesa</p>
+        <p>Gestore Dieta Casalinga & Calcolatore Spesa (Dott.ssa Elena Parovel)</p>
     </header>
 
     <!-- Caricamento PDF -->
     <div class="card">
         <div class="card-title">📄 Importa PDF della Dieta</div>
         <div class="upload-area" id="dropZone" onclick="document.getElementById('fileInput').click()">
-            <p><strong>Clicca o trascina qui il PDF della dieta</strong></p>
-            <p style="font-size: 0.8rem; color: var(--text-muted);">Estrae automaticamente ingredienti e grammature</p>
+            <p><strong>Clicca o trascina qui il PDF della dieta di Lulù</strong></p>
+            <p style="font-size: 0.8rem; color: var(--text-muted);">Compatibile con i piani nutrizionali della Dott.ssa Parovel</p>
             <input type="file" id="fileInput" accept="application/pdf" style="display:none" onchange="handleFile(this.files[0])">
         </div>
         <div id="status" style="margin-top: 8px; font-size: 0.85rem; color: var(--text-muted);"></div>
     </div>
 
-    <!-- Selettore Giorni -->
-    <div class="days-picker">
-        <label for="daysCount">🛒 Giorni per la spesa:</label>
-        <input type="number" id="daysCount" value="10" min="1" max="60" onchange="calculateShopping()">
-        <span>giorni totali</span>
+    <!-- Controlli: Selettore Menù e Giorni -->
+    <div class="controls-row">
+        <div class="control-group">
+            <label for="menuSelect">📋 Seleziona Menù:</label>
+            <select id="menuSelect" onchange="switchMenu()">
+                <option value="1">Menù 1</option>
+                <option value="2">Menù 2</option>
+                <option value="3">Menù 3</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label for="daysCount">🛒 Giorni per spesa:</label>
+            <input type="number" id="daysCount" value="10" min="1" max="60" onchange="calculateShopping()">
+        </div>
     </div>
 
     <div class="grid">
@@ -250,7 +264,7 @@
                 <tbody id="dietTable"></tbody>
             </table>
 
-            <!-- Form inserimento rapido -->
+            <!-- Form inserimento manuale -->
             <div class="form-row">
                 <input type="text" id="addName" placeholder="Ingrediente">
                 <input type="number" id="addAmount" placeholder="g">
@@ -268,20 +282,29 @@
 </div>
 
 <script>
-    // Lista di partenza predefinita
-    let diet = [
-        { name: "Macinato di Manzo", amount: 70, cat: "Proteina" },
-        { name: "Riso Soffiato / Cotto", amount: 35, cat: "Carboidrati" },
-        { name: "Carote Cotte", amount: 20, cat: "Verdura" },
-        { name: "Zucchine Cotte", amount: 20, cat: "Verdura" },
-        { name: "Olio di Salmone", amount: 3, cat: "Grassi" },
-        { name: "Integratore Calcio/Vitamine", amount: 2, cat: "Integratore" }
-    ];
+    // Menù predefiniti di riserva
+    let allMenus = {
+        "1": [
+            { name: "Vitellone (tagli anteriori)", amount: 560, cat: "Proteina" },
+            { name: "Riso Basmati", amount: 135, cat: "Carboidrati" },
+            { name: "Zucchine", amount: 135, cat: "Verdura" },
+            { name: "Carote", amount: 135, cat: "Verdura" },
+            { name: "Olio di Semi di Girasole", amount: 16, cat: "Grassi" },
+            { name: "Olio di Salmone", amount: 8, cat: "Grassi" },
+            { name: "Essential Cane", amount: 24, cat: "Integratore" }
+        ],
+        "2": [],
+        "3": []
+    };
+
+    let activeMenuKey = "1";
 
     function renderDiet() {
         const tbody = document.getElementById('dietTable');
         tbody.innerHTML = '';
-        diet.forEach((item, index) => {
+        const currentDiet = allMenus[activeMenuKey] || [];
+
+        currentDiet.forEach((item, index) => {
             tbody.innerHTML += `
                 <tr>
                     <td><strong>${item.name}</strong></td>
@@ -294,13 +317,19 @@
         calculateShopping();
     }
 
+    function switchMenu() {
+        activeMenuKey = document.getElementById('menuSelect').value;
+        renderDiet();
+    }
+
     function addIngredient() {
         const name = document.getElementById('addName').value.trim();
         const amount = parseFloat(document.getElementById('addAmount').value);
         const cat = document.getElementById('addCat').value;
 
         if (name && amount > 0) {
-            diet.push({ name, amount, cat });
+            if (!allMenus[activeMenuKey]) allMenus[activeMenuKey] = [];
+            allMenus[activeMenuKey].push({ name, amount, cat });
             document.getElementById('addName').value = '';
             document.getElementById('addAmount').value = '';
             renderDiet();
@@ -308,7 +337,7 @@
     }
 
     function removeIngredient(index) {
-        diet.splice(index, 1);
+        allMenus[activeMenuKey].splice(index, 1);
         renderDiet();
     }
 
@@ -316,8 +345,14 @@
         const days = parseInt(document.getElementById('daysCount').value) || 1;
         const listDiv = document.getElementById('shoppingList');
         listDiv.innerHTML = '';
+        const currentDiet = allMenus[activeMenuKey] || [];
 
-        diet.forEach(item => {
+        if (currentDiet.length === 0) {
+            listDiv.innerHTML = '<p style="color: var(--text-muted); font-size: 0.9rem;">Nessun ingrediente in questo menù.</p>';
+            return;
+        }
+
+        currentDiet.forEach(item => {
             const totalGrams = item.amount * days;
             const displayQty = totalGrams >= 1000 
                 ? (totalGrams / 1000).toFixed(2).replace('.00', '') + ' kg'
@@ -337,8 +372,9 @@
 
     function copyList() {
         const days = document.getElementById('daysCount').value;
-        let txt = `🛒 Spesa per Lulù (${days} giorni):\n\n`;
-        diet.forEach(item => {
+        const currentDiet = allMenus[activeMenuKey] || [];
+        let txt = `🛒 Spesa per Lulù - Menù ${activeMenuKey} (${days} giorni):\n\n`;
+        currentDiet.forEach(item => {
             const totalGrams = item.amount * days;
             const qty = totalGrams >= 1000 ? (totalGrams / 1000).toFixed(2) + ' kg' : totalGrams + ' g';
             txt += `• ${item.name}: ${qty}\n`;
@@ -347,55 +383,81 @@
         alert('Lista copiata negli appunti!');
     }
 
-    // Lettura PDF
+    // Parsing evoluto per PDF della Dott.ssa Elena Parovel
     async function handleFile(file) {
         if (!file || file.type !== "application/pdf") return;
-        document.getElementById('status').innerText = "Lettura PDF...";
+        document.getElementById('status').innerText = "Lettura ed estrazione menù in corso...";
 
         try {
             const buffer = await file.arrayBuffer();
             const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
-            let text = "";
+            let fullText = "";
 
             for (let i = 1; i <= pdf.numPages; i++) {
                 const page = await pdf.getPage(i);
                 const content = await page.getTextContent();
-                text += content.items.map(it => it.str).join(" ") + "\n";
+                fullText += content.items.map(it => it.str).join(" ") + "\n";
             }
 
-            parseText(text);
-            document.getElementById('status').innerText = "PDF caricato con successo!";
+            parseParovelPDF(fullText);
         } catch (e) {
+            console.error(e);
             document.getElementById('status').innerText = "Errore nella lettura del PDF.";
         }
     }
 
-    function parseText(text) {
-        const lines = text.split(/\n|,|;/);
-        const parsed = [];
-        const regex = /([A-Za-zàèéìòù\s]+)[:\-]?\s*(\d+[\.,]?\d*)\s*(g|gr|grammi)/i;
+    function parseParovelPDF(text) {
+        // Cerca i blocchi "MENÙ 1", "MENÙ 2", "MENÙ 3"
+        const menuRegex = /MENÙ\s*([1-3])/gi;
+        const parsedMenus = { "1": [], "2": [], "3": [] };
 
-        lines.forEach(line => {
-            const match = line.match(regex);
+        // Pulisce e separa le righe
+        const rawLines = text.split('\n');
+        let currentMenu = "1";
+
+        // Regex avanzata per catturare l'ingrediente e i grammi (es. "560 gr." o "16 gr. (4 cucchiaini)")
+        const lineRegex = /([A-Za-zàèéìòù\s\(\)]+?)\s+(\d+[\.,]?\d*)\s*(gr\.|g|grammi)/i;
+
+        rawLines.forEach(line => {
+            const mMatch = line.match(/MENÙ\s*([1-3])/i);
+            if (mMatch) {
+                currentMenu = mMatch[1];
+            }
+
+            // Ignora intestazioni e dati nutrizionali
+            if (line.includes("PRINCIPALI CARATTERISTICHE") || line.includes("Calorie") || line.includes("Proteine")) {
+                return;
+            }
+
+            const match = line.match(lineRegex);
             if (match) {
-                const name = match[1].trim();
+                let name = match[1].replace(/\(spalla.*?\)/gi, '').trim(); // pulisce note lunghi tra parentesi
                 const amount = parseFloat(match[2].replace(',', '.'));
-                if (name.length > 2) {
+
+                if (name.length > 2 && !name.toLowerCase().includes("peso") && !name.toLowerCase().includes("razione")) {
                     let cat = "Proteina";
                     const l = name.toLowerCase();
-                    if (l.includes("riso") || l.includes("pasta") || l.includes("patat")) cat = "Carboidrati";
-                    else if (l.includes("carot") || l.includes("zucch") || l.includes("verd")) cat = "Verdura";
+                    if (l.includes("riso") || l.includes("pasta") || l.includes("patat") || l.includes("couscous")) cat = "Carboidrati";
+                    else if (l.includes("carot") || l.includes("zucch") || l.includes("zucca") || l.includes("finocchio") || l.includes("verdura")) cat = "Verdura";
                     else if (l.includes("olio") || l.includes("grasso")) cat = "Grassi";
-                    else if (l.includes("integ") || l.includes("vit")) cat = "Integratore";
+                    else if (l.includes("essential") || l.includes("integ") || l.includes("vit")) cat = "Integratore";
 
-                    parsed.push({ name, amount, cat });
+                    // Evita duplicati ravvicinati
+                    if (!parsedMenus[currentMenu].some(i => i.name === name)) {
+                        parsedMenus[currentMenu].push({ name, amount, cat });
+                    }
                 }
             }
         });
 
-        if (parsed.length > 0) {
-            diet = parsed;
+        let totalExtracted = parsedMenus["1"].length + parsedMenus["2"].length + parsedMenus["3"].length;
+
+        if (totalExtracted > 0) {
+            allMenus = parsedMenus;
+            document.getElementById('status').innerText = `Dieta importata con successo! Estratti i menù dal PDF.`;
             renderDiet();
+        } else {
+            document.getElementById('status').innerText = "Impossibile leggere le tabelle. Puoi comunque inserire gli ingredienti manualmente.";
         }
     }
 
