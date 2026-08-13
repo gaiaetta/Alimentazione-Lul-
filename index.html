@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestione Dieta e Spesa di Lulù</title>
+  <title>🐾 La Dieta di Lulù 💖</title>
   <style>
     :root {
-      --bg-color: #f8f9fa;
+      --bg-color: #fff0f5;        /* Rosa chiarissimo / LavenderBlush */
       --card-bg: #ffffff;
-      --primary: #e06666;
-      --primary-hover: #cc5252;
-      --secondary: #4a5568;
-      --accent: #ed8936;
-      --text: #2d3748;
-      --border: #e2e8f0;
-      --radius: 12px;
+      --primary: #ff6b8b;         /* Rosa vivido / Coral pink */
+      --primary-hover: #ff4770;
+      --accent: #ffb6c1;          /* Rosa pastello */
+      --soft-pink: #fff5f7;
+      --text: #4a3e3d;            /* Marrone/grigio caldo per contrasto morbido */
+      --border: #ffd1dc;          /* Bordo rosa chiaro */
+      --radius: 16px;
     }
 
     * { box-sizing: border-box; }
@@ -39,34 +39,39 @@
 
     header {
       text-align: center;
-      padding: 10px 0;
+      padding: 15px 0;
+      background: linear-gradient(135deg, #ffe4e1, #ffd1dc);
+      border-radius: var(--radius);
+      box-shadow: 0 4px 15px rgba(255, 107, 139, 0.15);
+      border: 2px solid #ffb6c1;
     }
 
     h1 {
       margin: 0 0 6px 0;
-      color: #1a202c;
-      font-size: 1.8rem;
+      color: #d81b60;
+      font-size: 1.9rem;
     }
 
     header p {
       margin: 0;
-      color: #718096;
+      color: #880e4f;
       font-size: 0.95rem;
+      font-weight: 500;
     }
 
     .card {
       background: var(--card-bg);
       border-radius: var(--radius);
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      padding: 22px;
+      box-shadow: 0 6px 16px rgba(233, 30, 99, 0.06);
       border: 1px solid var(--border);
     }
 
     .card h2 {
       margin-top: 0;
-      font-size: 1.25rem;
-      color: #2d3748;
-      border-bottom: 2px solid var(--bg-color);
+      font-size: 1.3rem;
+      color: #c2185b;
+      border-bottom: 2px dashed var(--accent);
       padding-bottom: 10px;
       display: flex;
       align-items: center;
@@ -86,52 +91,58 @@
       gap: 6px;
       font-weight: 600;
       font-size: 0.9rem;
-      color: #4a5568;
+      color: #880e4f;
     }
 
     input, select, button {
-      padding: 10px 12px;
-      border-radius: 8px;
+      padding: 12px 14px;
+      border-radius: 10px;
       border: 1px solid var(--border);
       font-size: 0.95rem;
       outline: none;
       width: 100%;
-      background-color: #fff;
+      background-color: var(--soft-pink);
+      color: var(--text);
     }
 
     input:focus, select:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(224, 102, 102, 0.15);
+      box-shadow: 0 0 0 3px rgba(255, 107, 139, 0.25);
     }
 
     button {
-      background-color: var(--primary);
+      background: linear-gradient(135deg, #ff6b8b, #ff4770);
       color: white;
       border: none;
-      font-weight: 600;
+      font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.2s, transform 0.1s;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(255, 71, 112, 0.3);
     }
 
-    button:hover { background-color: var(--primary-hover); }
+    button:hover {
+      background: linear-gradient(135deg, #ff4770, #d81b60);
+      transform: translateY(-1px);
+    }
+
     button:active { transform: scale(0.98); }
 
     .btn-secondary {
-      background-color: #718096;
-      margin-top: 10px;
+      background: linear-gradient(135deg, #f48fb1, #ce93d8);
+      margin-top: 12px;
+      box-shadow: 0 4px 10px rgba(206, 147, 216, 0.3);
     }
-    .btn-secondary:hover { background-color: #4a5568; }
 
     .results {
-      margin-top: 15px;
+      margin-top: 18px;
       padding-top: 15px;
-      border-top: 1px dashed var(--border);
+      border-top: 2px dotted var(--accent);
     }
 
     .results h3 {
-      margin: 0 0 10px 0;
-      font-size: 1.05rem;
-      color: #2d3748;
+      margin: 0 0 12px 0;
+      font-size: 1.1rem;
+      color: #ad1457;
     }
 
     ul {
@@ -141,48 +152,50 @@
     }
 
     li {
-      padding: 10px 14px;
-      background: #f7fafc;
-      border: 1px solid #edf2f7;
-      border-radius: 8px;
+      padding: 12px 16px;
+      background: var(--soft-pink);
+      border: 1px solid var(--border);
+      border-radius: 10px;
       margin-bottom: 8px;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      font-weight: 500;
     }
 
     .pdf-viewer {
       width: 100%;
       height: 420px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
       margin-top: 12px;
     }
 
     .highlight {
       font-weight: bold;
-      color: var(--primary);
+      color: #d81b60;
     }
 
     .menus-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 15px;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
     .menu-card {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-      padding: 14px;
+      background: var(--soft-pink);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(255, 182, 193, 0.2);
     }
 
     .menu-card h3 {
       margin: 0 0 10px 0;
-      color: var(--primary);
+      color: #c2185b;
       font-size: 1.1rem;
-      border-bottom: 1px solid #cbd5e1;
+      border-bottom: 1px solid var(--accent);
       padding-bottom: 6px;
     }
 
@@ -190,22 +203,25 @@
       display: flex;
       justify-content: space-between;
       font-size: 0.9rem;
-      padding: 4px 0;
-      border-bottom: 1px style dotted #e2e8f0;
+      padding: 5px 0;
+      border-bottom: 1px dotted #ffd1dc;
     }
 
     .sub-note {
-      font-size: 0.85rem;
-      color: #718096;
+      font-size: 0.88rem;
+      color: #ad1457;
       margin-top: -4px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .pdf-status {
-      font-size: 0.85rem;
-      color: #38a169;
-      font-weight: 600;
-      margin-top: 6px;
+      font-size: 0.88rem;
+      color: #2e7d32;
+      font-weight: bold;
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
   </style>
 </head>
@@ -213,79 +229,79 @@
 
 <div class="container">
   <header>
-    <h1>🐾 Gestione Dieta & Spesa di Lulù</h1>
-    <p>Calcolo automatico della spesa per menù e proporzioni degli ingredienti</p>
+    <h1>🎀 La Dieta di Lulù 🐩✨</h1>
+    <p>Calcolatore automatico per spesa, menù e porzioni bilanciate 💖</p>
   </header>
 
   <!-- SEZIONE 1: CONSULTAZIONE E SALVATAGGIO PDF -->
   <section class="card">
-    <h2>📄 1. Documento Dieta (PDF)</h2>
+    <h2>📄 1. Il PDF della Dieta 📑</h2>
     <label>
-      Carica il PDF della dieta (verrà salvato automaticamente nel dispositivo):
+      Carica il file PDF della veterinaria (rimarrà salvato nell'app!):
       <input type="file" id="pdfInput" accept="application/pdf">
     </label>
-    <div id="pdfStatus" class="pdf-status" style="display: none;">✓ PDF Salvato in memoria!</div>
+    <div id="pdfStatus" class="pdf-status" style="display: none;">💖 PDF salvato con successo in memoria!</div>
     <iframe id="pdfFrame" class="pdf-viewer" style="display: none;"></iframe>
-    <button id="removePdfBtn" class="btn-secondary" style="display: none;" onclick="removeSavedPdf()">Rimuovi PDF salvato</button>
+    <button id="removePdfBtn" class="btn-secondary" style="display: none;" onclick="removeSavedPdf()">🗑️ Rimuovi PDF Salvato</button>
   </section>
 
   <!-- SEZIONE 2: RIEPILOGO MENÙ COMPLETI -->
   <section class="card">
-    <h2>📋 2. Scheda dei 3 Menù Giornalieri</h2>
-    <p class="sub-note">Quantità giornaliere di riferimento per ciascun menù esaminato:</p>
+    <h2>🥣 2. I 3 Menù di Lulù 🍓</h2>
+    <p class="sub-note">Razioni e quantitativi giornalieri per ogni ricetta della settimana:</p>
     <div class="menus-grid" id="menusOverview"></div>
   </section>
 
   <!-- SEZIONE 3: CALCOLO SPESA -->
   <section class="card">
-    <h2>🛒 3. Calcola Lista della Spesa</h2>
+    <h2>🛒 3. Lista della Spesa Automatica 🛍️</h2>
     <div class="grid-form">
       <label>
-        Seleziona Menù:
+        Scegli il Menù:
         <select id="menuSelectSpesa">
-          <option value="menu1">Menù 1: Tacchino & Zucchine</option>
-          <option value="menu2">Menù 2: Maiale & Carote</option>
-          <option value="menu3">Menù 3: Manzo & Zucca</option>
+          <option value="menu1">Menù 1: Tacchino & Zucchine 🦃</option>
+          <option value="menu2">Menù 2: Maiale & Carote 🐖</option>
+          <option value="menu3">Menù 3: Manzo & Zucca 🥩</option>
         </select>
       </label>
       <label>
-        Numero di giorni:
+        Quanti giorni preparare?
         <input type="number" id="daysInput" value="10" min="1" max="90">
       </label>
-      <button onclick="calculateShoppingList()">Genera Lista Spesa</button>
+      <button onclick="calculateShoppingList()">✨ Calcola Spesa</button>
     </div>
     <div id="shoppingResult" class="results" style="display: none;">
-      <h3>Lista della spesa per <span id="daysCount" class="highlight"></span> giorni (<span id="selectedMenuName" class="highlight"></span>):</h3>
+      <h3>🛍️ Lista spesa per <span id="daysCount" class="highlight"></span> giorni (<span id="selectedMenuName" class="highlight"></span>):</h3>
       <ul id="shoppingList"></ul>
     </div>
   </section>
 
   <!-- SEZIONE 4: CALCOLO IN PROPORZIONE -->
   <section class="card">
-    <h2>⚖️ 4. Calcola Pasti e Ingrediente Mancante</h2>
-    <p class="sub-note">Inserisci i grammi che hai a disposizione di un ingrediente per calcolare gli altri ingredienti del menù e quanti giorni/pasti completi puoi coprire.</p>
+    <h2>⚖️ 4. Calcolo Porzioni in Proporzione 🥗</h2>
+    <p class="sub-note">Metti i grammi dell'ingrediente che hai nel frigo e calcolo gli altri e i pasti totali! 💕</p>
     <div class="grid-form">
       <label>
         Menù di riferimento:
         <select id="menuSelectProporzioni" onchange="updateIngredientSelectOptions()">
-          <option value="menu1">Menù 1: Tacchino & Zucchine</option>
-          <option value="menu2">Menù 2: Maiale & Carote</option>
-          <option value="menu3">Menù 3: Manzo & Zucca</option>
+          <option value="menu1">Menù 1: Tacchino & Zucchine 🦃</option>
+          <option value="menu2">Menù 2: Maiale & Carote 🐖</option>
+          <option value="menu3">Menù 3: Manzo & Zucca 🥩</option>
         </select>
       </label>
       <label>
-        Ingrediente che hai in casa:
+        Ingrediente che hai a casa:
         <select id="ingredientSelect"></select>
       </label>
       <label>
-        Grammi disponibili:
+        Grammi a disposizione:
         <input type="number" id="availableGrams" placeholder="Es. 500">
       </label>
-      <button onclick="calculateProportions()">Calcola Proporzioni</button>
+      <button onclick="calculateProportions()">🌸 Calcola Proporzioni</button>
     </div>
     <div id="proportionResult" class="results" style="display: none;">
-      <h3>Risultato proporzioni per <span id="propMenuName" class="highlight"></span>:</h3>
-      <p>Puoi preparare circa <span id="mealsCount" class="highlight"></span> pasti completi (coprendo <span id="daysProportion" class="highlight"></span> giorni di dieta).</p>
+      <h3>✨ Risultato per <span id="propMenuName" class="highlight"></span>:</h3>
+      <p>Puoi preparare circa <span id="mealsCount" class="highlight"></span> pasti completi (coprendo <span id="daysProportion" class="highlight"></span> giorni di pappa! 🐶).</p>
       <p>Per completare le razioni ti serviranno esattamente:</p>
       <ul id="proportionList"></ul>
     </div>
@@ -293,32 +309,33 @@
 </div>
 
 <script>
+  // DEFINIZIONE STRUTTURA DEI 3 MENÙ
   const menus = {
     menu1: {
-      name: "Menù 1: Tacchino & Zucchine",
+      name: "Menù 1: Tacchino & Zucchine 🦃",
       ingredients: {
-        tacchino: { name: "Tacchino (Proteina)", dailyGrams: 120 },
-        zucchine: { name: "Zucchine (Verdura)", dailyGrams: 40 },
-        mirtilli: { name: "Mirtilli / Frutti di bosco", dailyGrams: 15 },
-        integratore: { name: "Integratore vitaminico", dailyGrams: 2 }
+        tacchino: { name: "Tacchino (Proteina) 🦃", dailyGrams: 120 },
+        zucchine: { name: "Zucchine al vapore 🥒", dailyGrams: 40 },
+        mirtilli: { name: "Mirtilli / Frutti di bosco 🫐", dailyGrams: 15 },
+        integratore: { name: "Integratore vitaminico 💊", dailyGrams: 2 }
       }
     },
     menu2: {
-      name: "Menù 2: Maiale & Carote",
+      name: "Menù 2: Maiale & Carote 🐖",
       ingredients: {
-        maiale: { name: "Lombo di Maiale (Proteina)", dailyGrams: 110 },
-        carote: { name: "Carote steamed (Verdura)", dailyGrams: 45 },
-        mela: { name: "Mela a cubetti", dailyGrams: 15 },
-        integratore: { name: "Integratore vitaminico", dailyGrams: 2 }
+        maiale: { name: "Lombo di Maiale (Proteina) 🐖", dailyGrams: 110 },
+        carote: { name: "Carote steamed 🥕", dailyGrams: 45 },
+        mela: { name: "Mela a cubetti 🍎", dailyGrams: 15 },
+        integratore: { name: "Integratore vitaminico 💊", dailyGrams: 2 }
       }
     },
     menu3: {
-      name: "Menù 3: Manzo & Zucca",
+      name: "Menù 3: Manzo & Zucca 🥩",
       ingredients: {
-        manzo: { name: "Macinato magro di Manzo", dailyGrams: 115 },
-        zucca: { name: "Zucca al vapore", dailyGrams: 40 },
-        fruttiBosco: { name: "Frutti di bosco misti", dailyGrams: 15 },
-        integratore: { name: "Integratore vitaminico", dailyGrams: 2 }
+        manzo: { name: "Macinato magro di Manzo 🥩", dailyGrams: 115 },
+        zucca: { name: "Zucca al vapore 🎃", dailyGrams: 40 },
+        fruttiBosco: { name: "Frutti di bosco misti 🍓", dailyGrams: 15 },
+        integratore: { name: "Integratore vitaminico 💊", dailyGrams: 2 }
       }
     }
   };
@@ -340,7 +357,7 @@
           localStorage.setItem('lulu_pdf_data', base64Pdf);
           displayPdf(base64Pdf);
         } catch (err) {
-          alert('Il file PDF è troppo grande per la memoria locale del browser.');
+          alert('Il file PDF è troppo pesante per la memoria locale del browser.');
         }
       };
       reader.readAsDataURL(file);
@@ -358,7 +375,7 @@
     const iframe = document.getElementById('pdfFrame');
     iframe.src = pdfBase64;
     iframe.style.display = 'block';
-    document.getElementById('pdfStatus').style.display = 'block';
+    document.getElementById('pdfStatus').style.display = 'flex';
     document.getElementById('removePdfBtn').style.display = 'inline-block';
   }
 
@@ -371,7 +388,7 @@
     document.getElementById('pdfInput').value = '';
   }
 
-  // --- LOGICA MENÙ E CALCOLI ---
+  // --- LOGICA DI CALCOLO E MENÙ ---
   function renderMenusOverview() {
     const container = document.getElementById('menusOverview');
     container.innerHTML = '';
@@ -395,7 +412,7 @@
     for (const [ingKey, ingData] of Object.entries(ingredients)) {
       const option = document.createElement('option');
       option.value = ingKey;
-      option.textContent = `${ingData.name} (${ingData.dailyGrams}g/giorno)`;
+      option.textContent = `${ingData.name} (${ingData.dailyGrams}g/die)`;
       ingredientSelect.appendChild(option);
     }
   }
