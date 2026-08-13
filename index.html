@@ -17,9 +17,7 @@
       --radius: 12px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -115,13 +113,14 @@
       transition: background-color 0.2s, transform 0.1s;
     }
 
-    button:hover {
-      background-color: var(--primary-hover);
-    }
+    button:hover { background-color: var(--primary-hover); }
+    button:active { transform: scale(0.98); }
 
-    button:active {
-      transform: scale(0.98);
+    .btn-secondary {
+      background-color: #718096;
+      margin-top: 10px;
     }
+    .btn-secondary:hover { background-color: #4a5568; }
 
     .results {
       margin-top: 15px;
@@ -154,7 +153,7 @@
 
     .pdf-viewer {
       width: 100%;
-      height: 380px;
+      height: 420px;
       border: 1px solid var(--border);
       border-radius: 8px;
       margin-top: 12px;
@@ -201,6 +200,13 @@
       margin-top: -4px;
       margin-bottom: 12px;
     }
+
+    .pdf-status {
+      font-size: 0.85rem;
+      color: #38a169;
+      font-weight: 600;
+      margin-top: 6px;
+    }
   </style>
 </head>
 <body>
@@ -211,23 +217,23 @@
     <p>Calcolo automatico della spesa per menù e proporzioni degli ingredienti</p>
   </header>
 
-  <!-- SEZIONE 1: CONSULTAZIONE PDF -->
+  <!-- SEZIONE 1: CONSULTAZIONE E SALVATAGGIO PDF -->
   <section class="card">
     <h2>📄 1. Documento Dieta (PDF)</h2>
     <label>
-      Carica il file PDF della dieta per averlo sempre visibile nell'app:
+      Carica il PDF della dieta (verrà salvato automaticamente nel dispositivo):
       <input type="file" id="pdfInput" accept="application/pdf">
     </label>
+    <div id="pdfStatus" class="pdf-status" style="display: none;">✓ PDF Salvato in memoria!</div>
     <iframe id="pdfFrame" class="pdf-viewer" style="display: none;"></iframe>
+    <button id="removePdfBtn" class="btn-secondary" style="display: none;" onclick="removeSavedPdf()">Rimuovi PDF salvato</button>
   </section>
 
   <!-- SEZIONE 2: RIEPILOGO MENÙ COMPLETI -->
   <section class="card">
     <h2>📋 2. Scheda dei 3 Menù Giornalieri</h2>
     <p class="sub-note">Quantità giornaliere di riferimento per ciascun menù esaminato:</p>
-    <div class="menus-grid" id="menusOverview">
-      <!-- Generato via JS -->
-    </div>
+    <div class="menus-grid" id="menusOverview"></div>
   </section>
 
   <!-- SEZIONE 3: CALCOLO SPESA -->
@@ -269,9 +275,7 @@
       </label>
       <label>
         Ingrediente che hai in casa:
-        <select id="ingredientSelect">
-          <!-- Popolato dinamicamente da JS -->
-        </select>
+        <select id="ingredientSelect"></select>
       </label>
       <label>
         Grammi disponibili:
@@ -289,7 +293,6 @@
 </div>
 
 <script>
-  // DEFINIZIONE STRUTTURA DEI 3 MENÙ DI LULÙ (Dosi giornaliere in grammi)
   const menus = {
     menu1: {
       name: "Menù 1: Tacchino & Zucchine",
@@ -320,52 +323,74 @@
     }
   };
 
-  // INIZIALIZZAZIONE PAGINA
   window.onload = function() {
     renderMenusOverview();
     updateIngredientSelectOptions();
+    loadSavedPdf();
   };
 
-  // 1. CARICAMENTO E ANTEPRIMA PDF
+  // --- GESTIONE SALVATAGGIO PDF IN LOCALSTORAGE ---
   document.getElementById('pdfInput').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file && file.type === 'application/pdf') {
-      const fileURL = URL.createObjectURL(file);
-      const iframe = document.getElementById('pdfFrame');
-      iframe.src = fileURL;
-      iframe.style.display = 'block';
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const base64Pdf = evt.target.result;
+        try {
+          localStorage.setItem('lulu_pdf_data', base64Pdf);
+          displayPdf(base64Pdf);
+        } catch (err) {
+          alert('Il file PDF è troppo grande per la memoria locale del browser.');
+        }
+      };
+      reader.readAsDataURL(file);
     }
   });
 
-  // 2. MOSTRA SCHEDA DEI 3 MENÙ
+  function loadSavedPdf() {
+    const savedPdf = localStorage.getItem('lulu_pdf_data');
+    if (savedPdf) {
+      displayPdf(savedPdf);
+    }
+  }
+
+  function displayPdf(pdfBase64) {
+    const iframe = document.getElementById('pdfFrame');
+    iframe.src = pdfBase64;
+    iframe.style.display = 'block';
+    document.getElementById('pdfStatus').style.display = 'block';
+    document.getElementById('removePdfBtn').style.display = 'inline-block';
+  }
+
+  function removeSavedPdf() {
+    localStorage.removeItem('lulu_pdf_data');
+    document.getElementById('pdfFrame').style.display = 'none';
+    document.getElementById('pdfFrame').src = '';
+    document.getElementById('pdfStatus').style.display = 'none';
+    document.getElementById('removePdfBtn').style.display = 'none';
+    document.getElementById('pdfInput').value = '';
+  }
+
+  // --- LOGICA MENÙ E CALCOLI ---
   function renderMenusOverview() {
     const container = document.getElementById('menusOverview');
     container.innerHTML = '';
-
     for (const [key, menu] of Object.entries(menus)) {
       const card = document.createElement('div');
       card.className = 'menu-card';
-      
       let html = `<h3>${menu.name}</h3>`;
       for (const [ingKey, ingData] of Object.entries(menu.ingredients)) {
-        html += `
-          <div class="ingredient-item">
-            <span>${ingData.name}</span>
-            <strong>${ingData.dailyGrams} g/die</strong>
-          </div>
-        `;
+        html += `<div class="ingredient-item"><span>${ingData.name}</span><strong>${ingData.dailyGrams} g/die</strong></div>`;
       }
       card.innerHTML = html;
       container.appendChild(card);
     }
   }
 
-  // AGGIORNA OPZIONI INGREDIENTI IN BASE AL MENÙ SELEZIONATO
   function updateIngredientSelectOptions() {
     const selectedMenuKey = document.getElementById('menuSelectProporzioni').value;
     const ingredientSelect = document.getElementById('ingredientSelect');
     ingredientSelect.innerHTML = '';
-
     const ingredients = menus[selectedMenuKey].ingredients;
     for (const [ingKey, ingData] of Object.entries(ingredients)) {
       const option = document.createElement('option');
@@ -375,63 +400,47 @@
     }
   }
 
-  // 3. CALCOLO LISTA DELLA SPESA
   function calculateShoppingList() {
     const menuKey = document.getElementById('menuSelectSpesa').value;
     const days = parseInt(document.getElementById('daysInput').value);
-
     if (isNaN(days) || days <= 0) return;
-
     const selectedMenu = menus[menuKey];
     const listElement = document.getElementById('shoppingList');
     listElement.innerHTML = '';
-
     for (const [ingKey, ingData] of Object.entries(selectedMenu.ingredients)) {
       const totalGrams = ingData.dailyGrams * days;
-      const displayValue = totalGrams >= 1000 
-        ? (totalGrams / 1000).toFixed(2) + ' kg' 
-        : totalGrams + ' g';
-
+      const displayValue = totalGrams >= 1000 ? (totalGrams / 1000).toFixed(2) + ' kg' : totalGrams + ' g';
       const li = document.createElement('li');
       li.innerHTML = `<span>${ingData.name}</span> <strong>${displayValue}</strong>`;
       listElement.appendChild(li);
     }
-
     document.getElementById('daysCount').textContent = days;
     document.getElementById('selectedMenuName').textContent = selectedMenu.name;
     document.getElementById('shoppingResult').style.display = 'block';
   }
 
-  // 4. CALCOLO IN PROPORZIONE
   function calculateProportions() {
     const menuKey = document.getElementById('menuSelectProporzioni').value;
     const selectedIngKey = document.getElementById('ingredientSelect').value;
     const grams = parseFloat(document.getElementById('availableGrams').value);
-
     if (isNaN(grams) || grams <= 0) return;
 
     const selectedMenu = menus[menuKey];
     const baseIngData = selectedMenu.ingredients[selectedIngKey];
-
     const daysCovered = grams / baseIngData.dailyGrams;
     const mealsCovered = daysCovered * 2;
 
     const listElement = document.getElementById('proportionList');
     listElement.innerHTML = '';
-
     for (const [ingKey, ingData] of Object.entries(selectedMenu.ingredients)) {
       if (ingKey !== selectedIngKey) {
         const requiredGrams = Math.round(ingData.dailyGrams * daysCovered);
-        const displayValue = requiredGrams >= 1000 
-          ? (requiredGrams / 1000).toFixed(2) + ' kg' 
-          : requiredGrams + ' g';
-
+        const displayValue = requiredGrams >= 1000 ? (requiredGrams / 1000).toFixed(2) + ' kg' : requiredGrams + ' g';
         const li = document.createElement('li');
         li.innerHTML = `<span>${ingData.name}</span> <strong>${displayValue}</strong>`;
         listElement.appendChild(li);
       }
     }
-
     document.getElementById('propMenuName').textContent = selectedMenu.name;
     document.getElementById('mealsCount').textContent = mealsCovered.toFixed(1);
     document.getElementById('daysProportion').textContent = daysCovered.toFixed(1);
