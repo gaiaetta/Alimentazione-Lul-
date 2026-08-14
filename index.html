@@ -6,15 +6,16 @@
   <title>🐾 La Dieta di Lulù 💖</title>
   <style>
     :root {
-      --bg-color: #fff0f5;        /* LavenderBlush */
+      --bg-color: #fcf9fa;        /* Sfondo quasi bianco con una punta di rosa */
       --card-bg: #ffffff;
-      --primary: #ff6b8b;         /* Coral pink */
-      --primary-hover: #ff4770;
-      --accent: #ffb6c1;          /* Rosa pastello */
-      --soft-pink: #fff5f7;
-      --text: #4a3e3d;            
-      --border: #ffd1dc;          
-      --radius: 16px;
+      --primary: #e07a93;         /* Rosa polvere/morbido per i pulsanti */
+      --primary-hover: #c9617a;
+      --accent: #f7d6e0;          /* Rosa chiarissimo per bordi e divisioni */
+      --soft-pink: #fdf5f7;       /* Sfondo tenue per le schede interne */
+      --text: #2c2525;            /* Testo scuro ad alto contrasto per massima leggibilità */
+      --text-muted: #6b5b5e;      /* Testo secondario discreto */
+      --border: #f0d8e0;          
+      --radius: 12px;
     }
 
     * { box-sizing: border-box; }
@@ -24,7 +25,7 @@
       background-color: var(--bg-color);
       color: var(--text);
       margin: 0;
-      padding: 20px 12px;
+      padding: 24px 12px;
       display: flex;
       justify-content: center;
     }
@@ -39,22 +40,22 @@
 
     header {
       text-align: center;
-      padding: 15px 0;
-      background: linear-gradient(135deg, #ffe4e1, #ffd1dc);
+      padding: 20px 16px;
+      background: #ffffff;
       border-radius: var(--radius);
-      box-shadow: 0 4px 15px rgba(255, 107, 139, 0.15);
-      border: 2px solid #ffb6c1;
+      border: 1px solid var(--border);
     }
 
     h1 {
       margin: 0 0 6px 0;
-      color: #d81b60;
-      font-size: 1.9rem;
+      color: #9e3b54;
+      font-size: 1.8rem;
+      font-weight: 700;
     }
 
     header p {
       margin: 0;
-      color: #880e4f;
+      color: var(--text-muted);
       font-size: 0.95rem;
       font-weight: 500;
     }
@@ -62,17 +63,16 @@
     .card {
       background: var(--card-bg);
       border-radius: var(--radius);
-      padding: 22px;
-      box-shadow: 0 6px 16px rgba(233, 30, 99, 0.06);
+      padding: 24px;
       border: 1px solid var(--border);
     }
 
     .card h2 {
       margin-top: 0;
-      font-size: 1.3rem;
-      color: #c2185b;
-      border-bottom: 2px dashed var(--accent);
-      padding-bottom: 10px;
+      font-size: 1.25rem;
+      color: #8c2d45;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 12px;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -81,7 +81,7 @@
     .grid-form {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 15px;
+      gap: 16px;
       align-items: end;
     }
 
@@ -90,53 +90,51 @@
       flex-direction: column;
       gap: 6px;
       font-weight: 600;
-      font-size: 0.9rem;
-      color: #880e4f;
+      font-size: 0.88rem;
+      color: var(--text-muted);
     }
 
     input, select, button {
-      padding: 12px 14px;
-      border-radius: 10px;
+      padding: 11px 14px;
+      border-radius: 8px;
       border: 1px solid var(--border);
       font-size: 0.95rem;
       outline: none;
       width: 100%;
-      background-color: var(--soft-pink);
+      background-color: var(--card-bg);
       color: var(--text);
     }
 
     input:focus, select:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(255, 107, 139, 0.25);
+      box-shadow: 0 0 0 3px rgba(224, 122, 147, 0.15);
     }
 
     button {
-      background: linear-gradient(135deg, #ff6b8b, #ff4770);
+      background-color: var(--primary);
       color: white;
       border: none;
-      font-weight: bold;
+      font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 10px rgba(255, 71, 112, 0.3);
+      transition: background-color 0.2s ease;
     }
 
     button:hover {
-      background: linear-gradient(135deg, #ff4770, #d81b60);
-      transform: translateY(-1px);
+      background-color: var(--primary-hover);
     }
 
-    button:active { transform: scale(0.98); }
+    button:active { transform: scale(0.99); }
 
     .results {
-      margin-top: 18px;
-      padding-top: 15px;
-      border-top: 2px dotted var(--accent);
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px dashed var(--border);
     }
 
     .results h3 {
       margin: 0 0 12px 0;
-      font-size: 1.1rem;
-      color: #ad1457;
+      font-size: 1.05rem;
+      color: #8c2d45;
     }
 
     ul {
@@ -149,7 +147,7 @@
       padding: 12px 16px;
       background: var(--soft-pink);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 8px;
       margin-bottom: 8px;
       display: flex;
       justify-content: space-between;
@@ -158,31 +156,30 @@
     }
 
     .highlight {
-      font-weight: bold;
-      color: #d81b60;
+      font-weight: 700;
+      color: #b83253;
     }
 
     .menus-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
+      gap: 16px;
       margin-top: 12px;
     }
 
     .menu-card {
       background: var(--soft-pink);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 2px 8px rgba(255, 182, 193, 0.2);
+      border-radius: 10px;
+      padding: 18px;
     }
 
     .menu-card h3 {
-      margin: 0 0 10px 0;
-      color: #c2185b;
-      font-size: 1.1rem;
-      border-bottom: 1px solid var(--accent);
-      padding-bottom: 6px;
+      margin: 0 0 12px 0;
+      color: #8c2d45;
+      font-size: 1.05rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
     }
 
     .ingredient-item {
@@ -190,24 +187,29 @@
       justify-content: space-between;
       align-items: center;
       font-size: 0.88rem;
-      padding: 6px 0;
-      border-bottom: 1px dotted #ffd1dc;
+      padding: 7px 0;
+      border-bottom: 1px dotted var(--border);
+    }
+
+    .ingredient-item:last-child {
+      border-bottom: none;
     }
 
     .portion-badge {
       font-size: 0.78rem;
-      color: #ad1457;
-      background-color: #ffe4e1;
-      padding: 2px 6px;
+      color: #8c2d45;
+      background-color: #ffffff;
+      padding: 3px 7px;
       border-radius: 6px;
-      margin-left: 4px;
+      margin-left: 6px;
+      border: 1px solid var(--border);
     }
 
     .sub-note {
       font-size: 0.88rem;
-      color: #ad1457;
+      color: var(--text-muted);
       margin-top: -4px;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
     }
   </style>
 </head>
@@ -219,7 +221,7 @@
     <p>Calcolatore automatico per spesa, menù e pappe per 2 pasti al giorno 💖</p>
   </header>
 
-  <!-- SEZIONE 1: RIEPILOGO MENÙ COMPLETI (GIORNO E PASTO) -->
+  <!-- SEZIONE 1: RIEPILOGO MENÙ COMPLETI -->
   <section class="card">
     <h2>🥣 1. I 3 Menù di Lulù (Dosi Giorno / Pasto) 🍓</h2>
     <p class="sub-note">Valori calcolati su <strong>2 pasti al giorno</strong> 🐶</p>
@@ -319,7 +321,6 @@
     updateIngredientSelectOptions();
   };
 
-  // --- RENDERIZZA LA SCHEDA DEI MENÙ CON DOSI AL GIORNO E PER PASTO ---
   function renderMenusOverview() {
     const container = document.getElementById('menusOverview');
     container.innerHTML = '';
@@ -357,7 +358,6 @@
     }
   }
 
-  // --- CALCOLO SPESA AUTOMATICA ---
   function calculateShoppingList() {
     const menuKey = document.getElementById('menuSelectSpesa').value;
     const days = parseInt(document.getElementById('daysInput').value);
@@ -382,7 +382,6 @@
     document.getElementById('shoppingResult').style.display = 'block';
   }
 
-  // --- CALCOLO PROPORZIONI (PER GIORNO E PER PASTO) ---
   function calculateProportions() {
     const menuKey = document.getElementById('menuSelectProporzioni').value;
     const selectedIngKey = document.getElementById('ingredientSelect').value;
@@ -392,7 +391,6 @@
     const selectedMenu = menus[menuKey];
     const baseIngData = selectedMenu.ingredients[selectedIngKey];
     
-    // Calcolo giorni e pasti coperti dall'ingrediente inserito
     const daysCovered = grams / baseIngData.dailyGrams;
     const mealsCovered = daysCovered * 2;
 
