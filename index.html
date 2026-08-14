@@ -211,6 +211,52 @@
       margin-top: -4px;
       margin-bottom: 16px;
     }
+
+    /* STILI SPECIFICI PER GLI INTEGRATORI */
+    .supplements-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .supplement-card {
+      background: var(--soft-pink);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .supplement-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .supplement-name {
+      font-weight: 600;
+      color: #8c2d45;
+      font-size: 0.95rem;
+    }
+
+    .supplement-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .supplement-dosage {
+      font-weight: 700;
+      color: #b83253;
+      background-color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-size: 0.88rem;
+      white-space: nowrap;
+    }
   </style>
 </head>
 <body>
@@ -228,9 +274,38 @@
     <div class="menus-grid" id="menusOverview"></div>
   </section>
 
-  <!-- SEZIONE 2: CALCOLO SPESA AUTOMATICA -->
+  <!-- SEZIONE 2: INTEGRATORI E INTEGRAZIONI -->
   <section class="card">
-    <h2>🛒 2. Lista della Spesa Automatica 🛍️</h2>
+    <h2>💊 2. Integratori e Integrazioni 🌸</h2>
+    <p class="sub-note">Posologia giornaliera e indicazioni di somministrazione 🐾</p>
+    <div class="supplements-list">
+      <div class="supplement-card">
+        <div class="supplement-info">
+          <span class="supplement-name">Probiotico Reuteral Pet Cane 🦠</span>
+          <span class="supplement-note">Effettuare un ciclo completo di 30 giorni</span>
+        </div>
+        <div class="supplement-dosage">1 capsula / die</div>
+      </div>
+      <div class="supplement-card">
+        <div class="supplement-info">
+          <span class="supplement-name">Ribes Pet Cane Gocce 🫐</span>
+          <span class="supplement-note">Integrazione quotidiana</span>
+        </div>
+        <div class="supplement-dosage">15 gocce / die</div>
+      </div>
+      <div class="supplement-card">
+        <div class="supplement-info">
+          <span class="supplement-name">Essential Cane Adulto 🥄</span>
+          <span class="supplement-note">Da aggiungere <strong>solo nei Menù 1, 2 e 3</strong></span>
+        </div>
+        <div class="supplement-dosage">4g / die (1 misurino)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEZIONE 3: CALCOLO SPESA AUTOMATICA -->
+  <section class="card">
+    <h2>🛒 3. Lista della Spesa Automatica 🛍️</h2>
     <div class="grid-form">
       <label>
         Scegli il Menù:
@@ -253,9 +328,9 @@
     </div>
   </section>
 
-  <!-- SEZIONE 3: CALCOLO IN PROPORZIONE -->
+  <!-- SEZIONE 4: CALCOLO IN PROPORZIONE -->
   <section class="card">
-    <h2>⚖️ 3. Calcolo Porzioni in Proporzione 🥗</h2>
+    <h2>⚖️ 4. Calcolo Porzioni in Proporzione 🥗</h2>
     <p class="sub-note">Metti i grammi dell'ingrediente che hai a casa e calcolo la ricetta completa per giorno e per singolo pasto! 💕</p>
     <div class="grid-form">
       <label>
@@ -287,7 +362,7 @@
 </div>
 
 <script>
-  // DEFINIZIONE STRUTTURA DEI 4 MENÙ (Senza integratori/gocce)
+  // DEFINIZIONE STRUTTURA DEI 4 MENÙ (Solo ingredienti principali per la spesa e proporzioni)
   const menus = {
     menu1: {
       name: "Menù 1: Tacchino & Patate 🦃",
