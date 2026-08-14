@@ -6,14 +6,14 @@
   <title>🐾 La Dieta di Lulù 💖</title>
   <style>
     :root {
-      --bg-color: #fff0f5;        /* Rosa chiarissimo / LavenderBlush */
+      --bg-color: #fff0f5;        /* LavenderBlush */
       --card-bg: #ffffff;
-      --primary: #ff6b8b;         /* Rosa vivido / Coral pink */
+      --primary: #ff6b8b;         /* Coral pink */
       --primary-hover: #ff4770;
       --accent: #ffb6c1;          /* Rosa pastello */
       --soft-pink: #fff5f7;
-      --text: #4a3e3d;            /* Marrone/grigio caldo per contrasto morbido */
-      --border: #ffd1dc;          /* Bordo rosa chiaro */
+      --text: #4a3e3d;            
+      --border: #ffd1dc;          
       --radius: 16px;
     }
 
@@ -178,7 +178,7 @@
 
     .menus-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 15px;
       margin-top: 12px;
     }
@@ -202,9 +202,19 @@
     .ingredient-item {
       display: flex;
       justify-content: space-between;
-      font-size: 0.9rem;
-      padding: 5px 0;
+      align-items: center;
+      font-size: 0.88rem;
+      padding: 6px 0;
       border-bottom: 1px dotted #ffd1dc;
+    }
+
+    .portion-badge {
+      font-size: 0.78rem;
+      color: #ad1457;
+      background-color: #ffe4e1;
+      padding: 2px 6px;
+      border-radius: 6px;
+      margin-left: 4px;
     }
 
     .sub-note {
@@ -230,7 +240,7 @@
 <div class="container">
   <header>
     <h1>🎀 La Dieta di Lulù 🐩✨</h1>
-    <p>Calcolatore automatico per spesa, menù e porzioni bilanciate 💖</p>
+    <p>Calcolatore automatico per spesa, menù e pappe per 2 pasti al giorno 💖</p>
   </header>
 
   <!-- SEZIONE 1: CONSULTAZIONE E SALVATAGGIO PDF -->
@@ -245,14 +255,14 @@
     <button id="removePdfBtn" class="btn-secondary" style="display: none;" onclick="removeSavedPdf()">🗑️ Rimuovi PDF Salvato</button>
   </section>
 
-  <!-- SEZIONE 2: RIEPILOGO MENÙ COMPLETI -->
+  <!-- SEZIONE 2: RIEPILOGO MENÙ COMPLETI (GIORNO E PASTO) -->
   <section class="card">
-    <h2>🥣 2. I 3 Menù di Lulù 🍓</h2>
-    <p class="sub-note">Razioni e quantitativi giornalieri per ogni ricetta della settimana:</p>
+    <h2>🥣 2. I 3 Menù di Lulù (Dosi Giorno / Pasto) 🍓</h2>
+    <p class="sub-note">Valori calcolati su <strong>2 pasti al giorno</strong> 🐶</p>
     <div class="menus-grid" id="menusOverview"></div>
   </section>
 
-  <!-- SEZIONE 3: CALCOLO SPESA -->
+  <!-- SEZIONE 3: CALCOLO SPESA AUTOMATICA -->
   <section class="card">
     <h2>🛒 3. Lista della Spesa Automatica 🛍️</h2>
     <div class="grid-form">
@@ -279,7 +289,7 @@
   <!-- SEZIONE 4: CALCOLO IN PROPORZIONE -->
   <section class="card">
     <h2>⚖️ 4. Calcolo Porzioni in Proporzione 🥗</h2>
-    <p class="sub-note">Metti i grammi dell'ingrediente che hai nel frigo e calcolo gli altri e i pasti totali! 💕</p>
+    <p class="sub-note">Metti i grammi dell'ingrediente che hai a casa e calcolo la ricetta completa per giorno e per singolo pasto! 💕</p>
     <div class="grid-form">
       <label>
         Menù di riferimento:
@@ -290,7 +300,7 @@
         </select>
       </label>
       <label>
-        Ingrediente che hai a casa:
+        Ingrediente a disposizione:
         <select id="ingredientSelect"></select>
       </label>
       <label>
@@ -301,15 +311,15 @@
     </div>
     <div id="proportionResult" class="results" style="display: none;">
       <h3>✨ Risultato per <span id="propMenuName" class="highlight"></span>:</h3>
-      <p>Puoi preparare circa <span id="mealsCount" class="highlight"></span> pasti completi (coprendo <span id="daysProportion" class="highlight"></span> giorni di pappa! 🐶).</p>
-      <p>Per completare le razioni ti serviranno esattamente:</p>
+      <p>Puoi preparare esattamente <span id="mealsCount" class="highlight"></span> pasti singoli (pari a <span id="daysProportion" class="highlight"></span> giorni completi! 🐶).</p>
+      <p>Per bilanciare la ricetta ti serviranno:</p>
       <ul id="proportionList"></ul>
     </div>
   </section>
 </div>
 
 <script>
-  // DEFINIZIONE STRUTTURA DEI 3 MENÙ
+  // DEFINIZIONE STRUTTURA DEI 3 MENÙ (Grammi totali al giorno)
   const menus = {
     menu1: {
       name: "Menù 1: Tacchino & Zucchine 🦃",
@@ -346,7 +356,7 @@
     loadSavedPdf();
   };
 
-  // --- GESTIONE SALVATAGGIO PDF IN LOCALSTORAGE ---
+  // --- GESTIONE LOCALSTORAGE PER IL PDF ---
   document.getElementById('pdfInput').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file && file.type === 'application/pdf') {
@@ -388,7 +398,7 @@
     document.getElementById('pdfInput').value = '';
   }
 
-  // --- LOGICA DI CALCOLO E MENÙ ---
+  // --- RENDERIZZA LA SCHEDA DEI MENÙ CON DOSI AL GIORNO E PER PASTO ---
   function renderMenusOverview() {
     const container = document.getElementById('menusOverview');
     container.innerHTML = '';
@@ -397,7 +407,15 @@
       card.className = 'menu-card';
       let html = `<h3>${menu.name}</h3>`;
       for (const [ingKey, ingData] of Object.entries(menu.ingredients)) {
-        html += `<div class="ingredient-item"><span>${ingData.name}</span><strong>${ingData.dailyGrams} g/die</strong></div>`;
+        const mealGrams = (ingData.dailyGrams / 2).toFixed(1).replace('.0', '');
+        html += `
+          <div class="ingredient-item">
+            <span>${ingData.name}</span>
+            <div>
+              <strong>${ingData.dailyGrams}g/die</strong>
+              <span class="portion-badge">(${mealGrams}g/pasto)</span>
+            </div>
+          </div>`;
       }
       card.innerHTML = html;
       container.appendChild(card);
@@ -410,23 +428,30 @@
     ingredientSelect.innerHTML = '';
     const ingredients = menus[selectedMenuKey].ingredients;
     for (const [ingKey, ingData] of Object.entries(ingredients)) {
+      const mealGrams = (ingData.dailyGrams / 2).toFixed(1).replace('.0', '');
       const option = document.createElement('option');
       option.value = ingKey;
-      option.textContent = `${ingData.name} (${ingData.dailyGrams}g/die)`;
+      option.textContent = `${ingData.name} (${ingData.dailyGrams}g/die - ${mealGrams}g/pasto)`;
       ingredientSelect.appendChild(option);
     }
   }
 
+  // --- CALCOLO SPESA AUTOMATICA ---
   function calculateShoppingList() {
     const menuKey = document.getElementById('menuSelectSpesa').value;
     const days = parseInt(document.getElementById('daysInput').value);
     if (isNaN(days) || days <= 0) return;
+
     const selectedMenu = menus[menuKey];
     const listElement = document.getElementById('shoppingList');
     listElement.innerHTML = '';
+
     for (const [ingKey, ingData] of Object.entries(selectedMenu.ingredients)) {
       const totalGrams = ingData.dailyGrams * days;
-      const displayValue = totalGrams >= 1000 ? (totalGrams / 1000).toFixed(2) + ' kg' : totalGrams + ' g';
+      const displayValue = totalGrams >= 1000 
+        ? (totalGrams / 1000).toFixed(2) + ' kg' 
+        : totalGrams + ' g';
+
       const li = document.createElement('li');
       li.innerHTML = `<span>${ingData.name}</span> <strong>${displayValue}</strong>`;
       listElement.appendChild(li);
@@ -436,6 +461,7 @@
     document.getElementById('shoppingResult').style.display = 'block';
   }
 
+  // --- CALCOLO PROPORZIONI (PER GIORNO E PER PASTO) ---
   function calculateProportions() {
     const menuKey = document.getElementById('menuSelectProporzioni').value;
     const selectedIngKey = document.getElementById('ingredientSelect').value;
@@ -444,23 +470,36 @@
 
     const selectedMenu = menus[menuKey];
     const baseIngData = selectedMenu.ingredients[selectedIngKey];
+    
+    // Calcolo giorni e pasti coperti dall'ingrediente inserito
     const daysCovered = grams / baseIngData.dailyGrams;
     const mealsCovered = daysCovered * 2;
 
     const listElement = document.getElementById('proportionList');
     listElement.innerHTML = '';
+
     for (const [ingKey, ingData] of Object.entries(selectedMenu.ingredients)) {
       if (ingKey !== selectedIngKey) {
-        const requiredGrams = Math.round(ingData.dailyGrams * daysCovered);
-        const displayValue = requiredGrams >= 1000 ? (requiredGrams / 1000).toFixed(2) + ' kg' : requiredGrams + ' g';
+        const requiredGramsTotal = Math.round(ingData.dailyGrams * daysCovered);
+        const requiredGramsPerMeal = (requiredGramsTotal / mealsCovered).toFixed(1).replace('.0', '');
+        
+        const displayValueTotal = requiredGramsTotal >= 1000 
+          ? (requiredGramsTotal / 1000).toFixed(2) + ' kg' 
+          : requiredGramsTotal + ' g';
+
         const li = document.createElement('li');
-        li.innerHTML = `<span>${ingData.name}</span> <strong>${displayValue}</strong>`;
+        li.innerHTML = `
+          <span>${ingData.name}</span> 
+          <div>
+            <strong>${displayValueTotal} totali</strong>
+            <span class="portion-badge">(${requiredGramsPerMeal}g a pasto)</span>
+          </div>`;
         listElement.appendChild(li);
       }
     }
     document.getElementById('propMenuName').textContent = selectedMenu.name;
-    document.getElementById('mealsCount').textContent = mealsCovered.toFixed(1);
-    document.getElementById('daysProportion').textContent = daysCovered.toFixed(1);
+    document.getElementById('mealsCount').textContent = mealsCovered.toFixed(1).replace('.0', '');
+    document.getElementById('daysProportion').textContent = daysCovered.toFixed(1).replace('.0', '');
     document.getElementById('proportionResult').style.display = 'block';
   }
 </script>
