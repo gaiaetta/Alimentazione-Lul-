@@ -127,12 +127,6 @@
 
     button:active { transform: scale(0.98); }
 
-    .btn-secondary {
-      background: linear-gradient(135deg, #f48fb1, #ce93d8);
-      margin-top: 12px;
-      box-shadow: 0 4px 10px rgba(206, 147, 216, 0.3);
-    }
-
     .results {
       margin-top: 18px;
       padding-top: 15px;
@@ -161,14 +155,6 @@
       justify-content: space-between;
       align-items: center;
       font-weight: 500;
-    }
-
-    .pdf-viewer {
-      width: 100%;
-      height: 420px;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      margin-top: 12px;
     }
 
     .highlight {
@@ -223,16 +209,6 @@
       margin-top: -4px;
       margin-bottom: 14px;
     }
-
-    .pdf-status {
-      font-size: 0.88rem;
-      color: #2e7d32;
-      font-weight: bold;
-      margin-top: 8px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
   </style>
 </head>
 <body>
@@ -243,28 +219,16 @@
     <p>Calcolatore automatico per spesa, menù e pappe per 2 pasti al giorno 💖</p>
   </header>
 
-  <!-- SEZIONE 1: CONSULTAZIONE E SALVATAGGIO PDF -->
+  <!-- SEZIONE 1: RIEPILOGO MENÙ COMPLETI (GIORNO E PASTO) -->
   <section class="card">
-    <h2>📄 1. Il PDF della Dieta 📑</h2>
-    <label>
-      Carica il file PDF della veterinaria (rimarrà salvato nell'app!):
-      <input type="file" id="pdfInput" accept="application/pdf">
-    </label>
-    <div id="pdfStatus" class="pdf-status" style="display: none;">💖 PDF salvato con successo in memoria!</div>
-    <iframe id="pdfFrame" class="pdf-viewer" style="display: none;"></iframe>
-    <button id="removePdfBtn" class="btn-secondary" style="display: none;" onclick="removeSavedPdf()">🗑️ Rimuovi PDF Salvato</button>
-  </section>
-
-  <!-- SEZIONE 2: RIEPILOGO MENÙ COMPLETI (GIORNO E PASTO) -->
-  <section class="card">
-    <h2>🥣 2. I 3 Menù di Lulù (Dosi Giorno / Pasto) 🍓</h2>
+    <h2>🥣 1. I 3 Menù di Lulù (Dosi Giorno / Pasto) 🍓</h2>
     <p class="sub-note">Valori calcolati su <strong>2 pasti al giorno</strong> 🐶</p>
     <div class="menus-grid" id="menusOverview"></div>
   </section>
 
-  <!-- SEZIONE 3: CALCOLO SPESA AUTOMATICA -->
+  <!-- SEZIONE 2: CALCOLO SPESA AUTOMATICA -->
   <section class="card">
-    <h2>🛒 3. Lista della Spesa Automatica 🛍️</h2>
+    <h2>🛒 2. Lista della Spesa Automatica 🛍️</h2>
     <div class="grid-form">
       <label>
         Scegli il Menù:
@@ -286,9 +250,9 @@
     </div>
   </section>
 
-  <!-- SEZIONE 4: CALCOLO IN PROPORZIONE -->
+  <!-- SEZIONE 3: CALCOLO IN PROPORZIONE -->
   <section class="card">
-    <h2>⚖️ 4. Calcolo Porzioni in Proporzione 🥗</h2>
+    <h2>⚖️ 3. Calcolo Porzioni in Proporzione 🥗</h2>
     <p class="sub-note">Metti i grammi dell'ingrediente che hai a casa e calcolo la ricetta completa per giorno e per singolo pasto! 💕</p>
     <div class="grid-form">
       <label>
@@ -353,50 +317,7 @@
   window.onload = function() {
     renderMenusOverview();
     updateIngredientSelectOptions();
-    loadSavedPdf();
   };
-
-  // --- GESTIONE LOCALSTORAGE PER IL PDF ---
-  document.getElementById('pdfInput').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file && file.type === 'application/pdf') {
-      const reader = new FileReader();
-      reader.onload = function(evt) {
-        const base64Pdf = evt.target.result;
-        try {
-          localStorage.setItem('lulu_pdf_data', base64Pdf);
-          displayPdf(base64Pdf);
-        } catch (err) {
-          alert('Il file PDF è troppo pesante per la memoria locale del browser.');
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-
-  function loadSavedPdf() {
-    const savedPdf = localStorage.getItem('lulu_pdf_data');
-    if (savedPdf) {
-      displayPdf(savedPdf);
-    }
-  }
-
-  function displayPdf(pdfBase64) {
-    const iframe = document.getElementById('pdfFrame');
-    iframe.src = pdfBase64;
-    iframe.style.display = 'block';
-    document.getElementById('pdfStatus').style.display = 'flex';
-    document.getElementById('removePdfBtn').style.display = 'inline-block';
-  }
-
-  function removeSavedPdf() {
-    localStorage.removeItem('lulu_pdf_data');
-    document.getElementById('pdfFrame').style.display = 'none';
-    document.getElementById('pdfFrame').src = '';
-    document.getElementById('pdfStatus').style.display = 'none';
-    document.getElementById('removePdfBtn').style.display = 'none';
-    document.getElementById('pdfInput').value = '';
-  }
 
   // --- RENDERIZZA LA SCHEDA DEI MENÙ CON DOSI AL GIORNO E PER PASTO ---
   function renderMenusOverview() {
