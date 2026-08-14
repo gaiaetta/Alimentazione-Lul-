@@ -223,8 +223,8 @@
 
   <!-- SEZIONE 1: RIEPILOGO MENÙ COMPLETI -->
   <section class="card">
-    <h2>🥣 1. I 3 Menù di Lulù (Dosi Giorno / Pasto) 🍓</h2>
-    <p class="sub-note">Valori calcolati su <strong>2 pasti al giorno</strong> 🐶</p>
+    <h2>🥣 1. I 4 Menù di Lulù (Dosi Giorno / Pasto) 🍓</h2>
+    <p class="sub-note">Valori calcolati su <strong>2 pasti al giorno</strong> (Dott.ssa Elena Parovel) 🐶</p>
     <div class="menus-grid" id="menusOverview"></div>
   </section>
 
@@ -235,9 +235,10 @@
       <label>
         Scegli il Menù:
         <select id="menuSelectSpesa">
-          <option value="menu1">Menù 1: Tacchino & Zucchine 🦃</option>
-          <option value="menu2">Menù 2: Maiale & Carote 🐖</option>
-          <option value="menu3">Menù 3: Manzo & Zucca 🥩</option>
+          <option value="menu1">Menù 1: Tacchino & Patate 🦃</option>
+          <option value="menu2">Menù 2: Merluzzo & Couscous 🐟</option>
+          <option value="menu3">Menù 3: Coniglio & Riso 🐰</option>
+          <option value="menu4">Menù 4: Vacanze (Tacchino commerciale) 🥫</option>
         </select>
       </label>
       <label>
@@ -260,9 +261,10 @@
       <label>
         Menù di riferimento:
         <select id="menuSelectProporzioni" onchange="updateIngredientSelectOptions()">
-          <option value="menu1">Menù 1: Tacchino & Zucchine 🦃</option>
-          <option value="menu2">Menù 2: Maiale & Carote 🐖</option>
-          <option value="menu3">Menù 3: Manzo & Zucca 🥩</option>
+          <option value="menu1">Menù 1: Tacchino & Patate 🦃</option>
+          <option value="menu2">Menù 2: Merluzzo & Couscous 🐟</option>
+          <option value="menu3">Menù 3: Coniglio & Riso 🐰</option>
+          <option value="menu4">Menù 4: Vacanze (Tacchino commerciale) 🥫</option>
         </select>
       </label>
       <label>
@@ -285,33 +287,48 @@
 </div>
 
 <script>
-  // DEFINIZIONE STRUTTURA DEI 3 MENÙ (Grammi totali al giorno)
+  // DEFINIZIONE STRUTTURA DEI 4 MENÙ (Grammi totali al giorno presi dalla dieta ufficiale)
   const menus = {
     menu1: {
-      name: "Menù 1: Tacchino & Zucchine 🦃",
+      name: "Menù 1: Tacchino & Patate 🦃",
       ingredients: {
-        tacchino: { name: "Tacchino (Proteina) 🦃", dailyGrams: 120 },
-        zucchine: { name: "Zucchine al vapore 🥒", dailyGrams: 40 },
-        mirtilli: { name: "Mirtilli / Frutti di bosco 🫐", dailyGrams: 15 },
-        integratore: { name: "Integratore vitaminico 💊", dailyGrams: 2 }
+        tacchino: { name: "Macinato di Tacchino 🦃", dailyGrams: 135 },
+        patate: { name: "Patate con buccia 🥔", dailyGrams: 55 },
+        avena: { name: "Fiocchi di avena 🌾", dailyGrams: 15 },
+        olio: { name: "Olio di semi di girasole 🌻", dailyGrams: 2 },
+        essential: { name: "Essential Cane Adulto 💊", dailyGrams: 4 },
+        ribes: { name: "Ribes Pet gocce 🫐", dailyGrams: 1.5 } // 15 gocce stimate ~1.5g o gestite come unità
       }
     },
     menu2: {
-      name: "Menù 2: Maiale & Carote 🐖",
+      name: "Menù 2: Merluzzo & Couscous 🐟",
       ingredients: {
-        maiale: { name: "Lombo di Maiale (Proteina) 🐖", dailyGrams: 110 },
-        carote: { name: "Carote steamed 🥕", dailyGrams: 45 },
-        mela: { name: "Mela a cubetti 🍎", dailyGrams: 15 },
-        integratore: { name: "Integratore vitaminico 💊", dailyGrams: 2 }
+        merluzzo: { name: "Filetti di Merluzzo 🐟", dailyGrams: 160 },
+        couscous: { name: "Couscous 🌾", dailyGrams: 35 },
+        cetriolo: { name: "Cetriolo con pelle 🥒", dailyGrams: 10 },
+        fagiolini: { name: "Fagiolini 🟢", dailyGrams: 10 },
+        olio: { name: "Olio di semi di girasole 🌻", dailyGrams: 12 },
+        essential: { name: "Essential Cane Adulto 💊", dailyGrams: 4 },
+        ribes: { name: "Ribes Pet gocce 🫐", dailyGrams: 1.5 }
       }
     },
     menu3: {
-      name: "Menù 3: Manzo & Zucca 🥩",
+      name: "Menù 3: Coniglio & Riso 🐰",
       ingredients: {
-        manzo: { name: "Macinato magro di Manzo 🥩", dailyGrams: 115 },
-        zucca: { name: "Zucca al vapore 🎃", dailyGrams: 40 },
-        fruttiBosco: { name: "Frutti di bosco misti 🍓", dailyGrams: 15 },
-        integratore: { name: "Integratore vitaminico 💊", dailyGrams: 2 }
+        coniglio: { name: "Coscio di coniglio disossato 🐰", dailyGrams: 140 },
+        riso: { name: "Riso basmati 🍚", dailyGrams: 25 },
+        finocchio: { name: "Finocchio 🥬", dailyGrams: 25 },
+        carote: { name: "Carote 🥕", dailyGrams: 25 },
+        olio: { name: "Olio di semi di girasole 🌻", dailyGrams: 4 },
+        essential: { name: "Essential Cane Adulto 💊", dailyGrams: 4 },
+        ribes: { name: "Ribes Pet gocce 🫐", dailyGrams: 1.5 }
+      }
+    },
+    menu4: {
+      name: "Menù 4: Vacanze (Tacchino commerciale) 🥫",
+      ingredients: {
+        umido: { name: "G&G Naturalis Pet Tacchino/Riso 🥫", dailyGrams: 265 },
+        carote: { name: "Carote grattugiate 🥕", dailyGrams: 40 }
       }
     }
   };
@@ -330,12 +347,14 @@
       let html = `<h3>${menu.name}</h3>`;
       for (const [ingKey, ingData] of Object.entries(menu.ingredients)) {
         const mealGrams = (ingData.dailyGrams / 2).toFixed(1).replace('.0', '');
+        let displayDaily = ingData.dailyGrams < 3 && ingKey === 'ribes' ? "15 gocce" : `${ingData.dailyGrams}g/die`;
+        let displayMeal = ingKey === 'ribes' ? "7-8 gocce" : `${mealGrams}g/pasto`;
         html += `
           <div class="ingredient-item">
             <span>${ingData.name}</span>
             <div>
-              <strong>${ingData.dailyGrams}g/die</strong>
-              <span class="portion-badge">(${mealGrams}g/pasto)</span>
+              <strong>${displayDaily}</strong>
+              <span class="portion-badge">(${displayMeal})</span>
             </div>
           </div>`;
       }
@@ -350,6 +369,7 @@
     ingredientSelect.innerHTML = '';
     const ingredients = menus[selectedMenuKey].ingredients;
     for (const [ingKey, ingData] of Object.entries(ingredients)) {
+      if (ingKey === 'ribes') continue; // Escludiamo le gocce fisse dal calcolo proporzionale principale se preferito
       const mealGrams = (ingData.dailyGrams / 2).toFixed(1).replace('.0', '');
       const option = document.createElement('option');
       option.value = ingKey;
@@ -368,10 +388,15 @@
     listElement.innerHTML = '';
 
     for (const [ingKey, ingData] of Object.entries(selectedMenu.ingredients)) {
-      const totalGrams = ingData.dailyGrams * days;
-      const displayValue = totalGrams >= 1000 
-        ? (totalGrams / 1000).toFixed(2) + ' kg' 
-        : totalGrams + ' g';
+      let displayValue = "";
+      if (ingKey === 'ribes') {
+        displayValue = "15 gocce al giorno";
+      } else {
+        const totalGrams = ingData.dailyGrams * days;
+        displayValue = totalGrams >= 1000 
+          ? (totalGrams / 1000).toFixed(2) + ' kg' 
+          : totalGrams + ' g';
+      }
 
       const li = document.createElement('li');
       li.innerHTML = `<span>${ingData.name}</span> <strong>${displayValue}</strong>`;
@@ -399,19 +424,26 @@
 
     for (const [ingKey, ingData] of Object.entries(selectedMenu.ingredients)) {
       if (ingKey !== selectedIngKey) {
-        const requiredGramsTotal = Math.round(ingData.dailyGrams * daysCovered);
-        const requiredGramsPerMeal = (requiredGramsTotal / mealsCovered).toFixed(1).replace('.0', '');
-        
-        const displayValueTotal = requiredGramsTotal >= 1000 
-          ? (requiredGramsTotal / 1000).toFixed(2) + ' kg' 
-          : requiredGramsTotal + ' g';
+        let displayValueTotal = "";
+        let requiredGramsPerMeal = "";
+
+        if (ingKey === 'ribes') {
+          displayValueTotal = "15 gocce al giorno";
+          requiredGramsPerMeal = "7-8 gocce";
+        } else {
+          const requiredGramsTotal = Math.round(ingData.dailyGrams * daysCovered);
+          requiredGramsPerMeal = (requiredGramsTotal / mealsCovered).toFixed(1).replace('.0', '');
+          displayValueTotal = requiredGramsTotal >= 1000 
+            ? (requiredGramsTotal / 1000).toFixed(2) + ' kg' 
+            : requiredGramsTotal + ' g';
+        }
 
         const li = document.createElement('li');
         li.innerHTML = `
           <span>${ingData.name}</span> 
           <div>
             <strong>${displayValueTotal} totali</strong>
-            <span class="portion-badge">(${requiredGramsPerMeal}g a pasto)</span>
+            <span class="portion-badge">(${requiredGramsPerMeal} a pasto)</span>
           </div>`;
         listElement.appendChild(li);
       }
