@@ -362,42 +362,51 @@
 </div>
 
 <script>
-  // DEFINIZIONE STRUTTURA DEI 4 MENÙ (Solo ingredienti principali per la spesa e proporzioni)
+  // STRUТTURA DEI MENÙ CON INTEGRATORI INCLUSI NEI MENÙ 1, 2 E 3
   const menus = {
     menu1: {
       name: "Menù 1: Tacchino & Patate 🦃",
       ingredients: {
-        tacchino: { name: "Macinato di Tacchino 🦃", dailyGrams: 135 },
-        patate: { name: "Patate con buccia 🥔", dailyGrams: 55 },
-        avena: { name: "Fiocchi di avena 🌾", dailyGrams: 15 },
-        olio: { name: "Olio di semi di girasole 🌻", dailyGrams: 2 }
+        tacchino: { name: "Macinato di Tacchino 🦃", dailyGrams: 135, type: 'food' },
+        patate: { name: "Patate con buccia 🥔", dailyGrams: 55, type: 'food' },
+        avena: { name: "Fiocchi di avena 🌾", dailyGrams: 15, type: 'food' },
+        olio: { name: "Olio di semi di girasole 🌻", dailyGrams: 2, type: 'food' },
+        essential: { name: "Essential Cane Adulto 🥄", dailyText: "4g (1 misurino)", mealText: "2g (1/2 misurino)", type: 'supp' },
+        reuteral: { name: "Probiotico Reuteral Pet 🦠", dailyText: "1 capsula", mealText: "1 cps/die", type: 'supp' },
+        ribes: { name: "Ribes Pet gocce 🫐", dailyText: "15 gocce", mealText: "7-8 gocce", type: 'supp' }
       }
     },
     menu2: {
       name: "Menù 2: Merluzzo & Couscous 🐟",
       ingredients: {
-        merluzzo: { name: "Filetti di Merluzzo 🐟", dailyGrams: 160 },
-        couscous: { name: "Couscous 🌾", dailyGrams: 35 },
-        cetriolo: { name: "Cetriolo con pelle 🥒", dailyGrams: 10 },
-        fagiolini: { name: "Fagiolini 🟢", dailyGrams: 10 },
-        olio: { name: "Olio di semi di girasole 🌻", dailyGrams: 12 }
+        merluzzo: { name: "Filetti di Merluzzo 🐟", dailyGrams: 160, type: 'food' },
+        couscous: { name: "Couscous 🌾", dailyGrams: 35, type: 'food' },
+        cetriolo: { name: "Cetriolo con pelle 🥒", dailyGrams: 10, type: 'food' },
+        fagiolini: { name: "Fagiolini 🟢", dailyGrams: 10, type: 'food' },
+        olio: { name: "Olio di semi di girasole 🌻", dailyGrams: 12, type: 'food' },
+        essential: { name: "Essential Cane Adulto 🥄", dailyText: "4g (1 misurino)", mealText: "2g (1/2 misurino)", type: 'supp' },
+        reuteral: { name: "Probiotico Reuteral Pet 🦠", dailyText: "1 capsula", mealText: "1 cps/die", type: 'supp' },
+        ribes: { name: "Ribes Pet gocce 🫐", dailyText: "15 gocce", mealText: "7-8 gocce", type: 'supp' }
       }
     },
     menu3: {
       name: "Menù 3: Coniglio & Riso 🐰",
       ingredients: {
-        coniglio: { name: "Coscio di coniglio disossato 🐰", dailyGrams: 140 },
-        riso: { name: "Riso basmati 🍚", dailyGrams: 25 },
-        finocchio: { name: "Finocchio 🥬", dailyGrams: 25 },
-        carote: { name: "Carote 🥕", dailyGrams: 25 },
-        olio: { name: "Olio di semi di girasole 🌻", dailyGrams: 4 }
+        coniglio: { name: "Coscio di coniglio disossato 🐰", dailyGrams: 140, type: 'food' },
+        riso: { name: "Riso basmati 🍚", dailyGrams: 25, type: 'food' },
+        finocchio: { name: "Finocchio 🥬", dailyGrams: 25, type: 'food' },
+        carote: { name: "Carote 🥕", dailyGrams: 25, type: 'food' },
+        olio: { name: "Olio di semi di girasole 🌻", dailyGrams: 4, type: 'food' },
+        essential: { name: "Essential Cane Adulto 🥄", dailyText: "4g (1 misurino)", mealText: "2g (1/2 misurino)", type: 'supp' },
+        reuteral: { name: "Probiotico Reuteral Pet 🦠", dailyText: "1 capsula", mealText: "1 cps/die", type: 'supp' },
+        ribes: { name: "Ribes Pet gocce 🫐", dailyText: "15 gocce", mealText: "7-8 gocce", type: 'supp' }
       }
     },
     menu4: {
       name: "Menù 4: Vacanze (Tacchino commerciale) 🥫",
       ingredients: {
-        umido: { name: "G&G Naturalis Pet Tacchino/Riso 🥫", dailyGrams: 265 },
-        carote: { name: "Carote grattugiate 🥕", dailyGrams: 40 }
+        umido: { name: "G&G Naturalis Pet Tacchino/Riso 🥫", dailyGrams: 265, type: 'food' },
+        carote: { name: "Carote grattugiate 🥕", dailyGrams: 40, type: 'food' }
       }
     }
   };
@@ -415,13 +424,24 @@
       card.className = 'menu-card';
       let html = `<h3>${menu.name}</h3>`;
       for (const [ingKey, ingData] of Object.entries(menu.ingredients)) {
-        const mealGrams = (ingData.dailyGrams / 2).toFixed(1).replace('.0', '');
+        let displayDaily = "";
+        let displayMeal = "";
+
+        if (ingData.type === 'food') {
+          const mealGrams = (ingData.dailyGrams / 2).toFixed(1).replace('.0', '');
+          displayDaily = `${ingData.dailyGrams}g/die`;
+          displayMeal = `${mealGrams}g/pasto`;
+        } else {
+          displayDaily = ingData.dailyText;
+          displayMeal = ingData.mealText;
+        }
+
         html += `
           <div class="ingredient-item">
             <span>${ingData.name}</span>
             <div>
-              <strong>${ingData.dailyGrams}g/die</strong>
-              <span class="portion-badge">(${mealGrams}g/pasto)</span>
+              <strong>${displayDaily}</strong>
+              <span class="portion-badge">(${displayMeal})</span>
             </div>
           </div>`;
       }
@@ -436,6 +456,7 @@
     ingredientSelect.innerHTML = '';
     const ingredients = menus[selectedMenuKey].ingredients;
     for (const [ingKey, ingData] of Object.entries(ingredients)) {
+      if (ingData.type === 'supp') continue; // Escludiamo gli integratori dalla selezione della materia prima
       const mealGrams = (ingData.dailyGrams / 2).toFixed(1).replace('.0', '');
       const option = document.createElement('option');
       option.value = ingKey;
@@ -454,10 +475,23 @@
     listElement.innerHTML = '';
 
     for (const [ingKey, ingData] of Object.entries(selectedMenu.ingredients)) {
-      const totalGrams = ingData.dailyGrams * days;
-      const displayValue = totalGrams >= 1000 
-        ? (totalGrams / 1000).toFixed(2) + ' kg' 
-        : totalGrams + ' g';
+      let displayValue = "";
+
+      if (ingData.type === 'food') {
+        const totalGrams = ingData.dailyGrams * days;
+        displayValue = totalGrams >= 1000 
+          ? (totalGrams / 1000).toFixed(2) + ' kg' 
+          : totalGrams + ' g';
+      } else {
+        if (ingKey === 'essential') {
+          const totalGrams = 4 * days;
+          displayValue = `${totalGrams} g (${days} misurini)`;
+        } else if (ingKey === 'reuteral') {
+          displayValue = `${days} capsule`;
+        } else if (ingKey === 'ribes') {
+          displayValue = `${15 * days} gocce`;
+        }
+      }
 
       const li = document.createElement('li');
       li.innerHTML = `<span>${ingData.name}</span> <strong>${displayValue}</strong>`;
@@ -485,19 +519,26 @@
 
     for (const [ingKey, ingData] of Object.entries(selectedMenu.ingredients)) {
       if (ingKey !== selectedIngKey) {
-        const requiredGramsTotal = Math.round(ingData.dailyGrams * daysCovered);
-        const requiredGramsPerMeal = (requiredGramsTotal / mealsCovered).toFixed(1).replace('.0', '');
-        
-        const displayValueTotal = requiredGramsTotal >= 1000 
-          ? (requiredGramsTotal / 1000).toFixed(2) + ' kg' 
-          : requiredGramsTotal + ' g';
+        let displayValueTotal = "";
+        let requiredGramsPerMeal = "";
+
+        if (ingData.type === 'food') {
+          const requiredGramsTotal = Math.round(ingData.dailyGrams * daysCovered);
+          requiredGramsPerMeal = (requiredGramsTotal / mealsCovered).toFixed(1).replace('.0', '') + "g a pasto";
+          displayValueTotal = requiredGramsTotal >= 1000 
+            ? (requiredGramsTotal / 1000).toFixed(2) + ' kg' 
+            : requiredGramsTotal + ' g';
+        } else {
+          displayValueTotal = ingData.dailyText + " / die";
+          requiredGramsPerMeal = ingData.mealText;
+        }
 
         const li = document.createElement('li');
         li.innerHTML = `
           <span>${ingData.name}</span> 
           <div>
-            <strong>${displayValueTotal} totali</strong>
-            <span class="portion-badge">(${requiredGramsPerMeal}g a pasto)</span>
+            <strong>${displayValueTotal}</strong>
+            <span class="portion-badge">(${requiredGramsPerMeal})</span>
           </div>`;
         listElement.appendChild(li);
       }
