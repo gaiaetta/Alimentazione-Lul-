@@ -282,14 +282,14 @@
       <div class="supplement-card">
         <div class="supplement-info">
           <span class="supplement-name">Probiotico Reuteral Pet Cane 🦠</span>
-          <span class="supplement-note">Effettuare un ciclo completo di 30 giorni</span>
+          <span class="supplement-note">Effettuare un ciclo completo di 30 giorni (Tutti i menù)</span>
         </div>
         <div class="supplement-dosage">1 capsula / die</div>
       </div>
       <div class="supplement-card">
         <div class="supplement-info">
           <span class="supplement-name">Ribes Pet Cane Gocce 🫐</span>
-          <span class="supplement-note">Integrazione quotidiana</span>
+          <span class="supplement-note">Integrazione quotidiana (Tutti i menù)</span>
         </div>
         <div class="supplement-dosage">15 gocce / die</div>
       </div>
@@ -362,7 +362,7 @@
 </div>
 
 <script>
-  // STRUТTURA DEI MENÙ CON INTEGRATORI INCLUSI NEI MENÙ 1, 2 E 3
+  // STRUTTURA DEI MENÙ CON INTEGRATORI INCLUSI IN TUTTI I MENÙ (CON ESSENTIAL SOLO NEI MENÙ 1, 2 E 3)
   const menus = {
     menu1: {
       name: "Menù 1: Tacchino & Patate 🦃",
@@ -406,7 +406,9 @@
       name: "Menù 4: Vacanze (Tacchino commerciale) 🥫",
       ingredients: {
         umido: { name: "G&G Naturalis Pet Tacchino/Riso 🥫", dailyGrams: 265, type: 'food' },
-        carote: { name: "Carote grattugiate 🥕", dailyGrams: 40, type: 'food' }
+        carote: { name: "Carote grattugiate 🥕", dailyGrams: 40, type: 'food' },
+        reuteral: { name: "Probiotico Reuteral Pet 🦠", dailyText: "1 capsula", mealText: "1 cps/die", type: 'supp' },
+        ribes: { name: "Ribes Pet gocce 🫐", dailyText: "15 gocce", mealText: "7-8 gocce", type: 'supp' }
       }
     }
   };
